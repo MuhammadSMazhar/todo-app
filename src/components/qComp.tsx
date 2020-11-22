@@ -1,31 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { questionPropType } from '../types/questionType';
 
-export const QComp:React.FC<questionPropType>=({question,options,callback})=>{
+export const QComp: React.FC<questionPropType> = ({ question, options, callback }) => {
     // console.log(question,options,'question,options')
-    return(
-        <div>
-            <div>
+    let [selectedAns, setSelectedAns] = useState('')
+    const handleSelection = (ev: any) => {
+        setSelectedAns(ev.target.value)
+    }
+    return (
+        <div className="question_container">
+            <h2>
                 {question}
-            </div>
+            </h2>
             <div>
-                <form onSubmit={callback}>
+                <form onSubmit={
+                    (e: React.FormEvent<EventTarget>) =>
+                        callback(e, selectedAns)
+                }
+                className="question_form"
+                >
                     {
-                        options.map((opt:string,ind:number)=>{
-                            return(
+                        options.map((opt: string, ind: number) => {
+                            return (
                                 <div key={ind}>
-                                <label>
-                                    <input type="radio"
-                                    value={opt}
-                                    name="opt"
-                                    />
-                                   {++ind}  {opt}
-                                </label>
+                                    <label className="radio">
+                                        <input type="radio"
+                                            value={opt}
+                                            name="opt"
+                                            required
+                                            checked={selectedAns===opt}
+                                            onChange={handleSelection}
+                                        />
+                                        {++ind}  {opt}
+                                    </label>
                                 </div>
                             )
                         })
                     }
-                    <input type="submit" />
+                    <input type="submit" className="submit"/>
                 </form>
             </div>
         </div>
